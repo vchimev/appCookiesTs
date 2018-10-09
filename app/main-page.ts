@@ -7,6 +7,7 @@ logic, and to set up your page’s data binding.
 import { EventData } from 'tns-core-modules/data/observable';
 import { Page } from 'tns-core-modules/ui/page';
 import { HelloWorldModel } from './main-view-model';
+import { WebView } from 'tns-core-modules/ui/web-view';
 
 // Event handler for Page "navigatingTo" event attached in main-page.xml
 export function navigatingTo(args: EventData) {
@@ -16,7 +17,7 @@ export function navigatingTo(args: EventData) {
     https://docs.nativescript.org/api-reference/classes/_ui_page_.page.html
     */
     let page = <Page>args.object;
-    
+
     /*
     A page’s bindingContext is an object that should be used to perform
     data binding between XML markup and TypeScript code. Properties
@@ -28,4 +29,13 @@ export function navigatingTo(args: EventData) {
     https://docs.nativescript.org/core-concepts/data-binding.
     */
     page.bindingContext = new HelloWorldModel();
+}
+
+export function loaded(args) {
+    let webView: WebView = <WebView>args.object;
+    let request = NSMutableURLRequest.requestWithURL(NSURL.URLWithString("https://httpbin.org/cookies"));
+    request.addValueForHTTPHeaderField("TeskCookieKey1=TeskCookieValue1;TeskCookieKey2=TeskCookieValue2;", "Cookie");
+    webView.ios.loadRequest(request);
+
+    console.log(request);
 }
